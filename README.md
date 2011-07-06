@@ -29,7 +29,7 @@ wget ......
 mv name_of_video.avi video.avi
 ```
 
-###3. Install x264, libvpx (someday we might want to support webM), and ffmpeg (with libavfilter).
+###3. Install transcode, x264, libvpx (someday we might want to support webM), and ffmpeg (with libavfilter).
 
 ```sh
 cd path_to_cloned_repo/lib
@@ -69,6 +69,9 @@ make tools/qt-faststart
 sudo checkinstall --pkgname=qt-faststart --pkgversion="$(date +%Y%m%d%H%M)-git" --backup=no \
     --deldoc=yes --fstrans=no --default install -D -m755 tools/qt-faststart \
     /usr/local/bin/qt-faststart
+
+# install transcode
+sudo apt-get install transcode
 ```
 
 ###4. Run the script!
