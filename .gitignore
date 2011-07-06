@@ -1,0 +1,10 @@
+# ignore all video files
+*.mp4
+*.avi
+*.ogv
+
+# ignore source files
+lib/x264
+lib/libvpx
+lib/ffmpeg
+

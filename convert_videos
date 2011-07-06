@@ -1,0 +1,43 @@
+#!/bin/sh
+
+input='input/video.avi'
+temp='output/temp.mp4'
+mp4_1280='output/video_1280.mp4'
+ogv_1280='output/video_1280.ogv'
+mp4_360='output/video_360.mp4'
+ogv_360='output/video_360.ogv'
+fade_duration=50
+
+
+
+#-----------------------------------------------------------------------------#
+# PRE-PROCESSING
+#-----------------------------------------------------------------------------#
+
+# get the total number of frames (required for fade in effects)
+frames=`tcprobe -i $input | grep -o -P "(?<=\blength:\s)(\w+)"`
+offset=`expr $frames - $fade_duration`
+
+# create a high quality mp4 with watermark and effects
+ffmpeg -i $input -vf \
+  "movie=img/watermark.png [logo]; [in][logo] overlay=main_w-overlay_w-10:main_h-overlay_h-10, fade=in:0:$fade_duration, fade=out:$offset:$fade_duration [out]" \
+  -s 1280x900 -acodec libfaac -aq 100 -vcodec libx264 -preset slow -crf 25 -threads 0 $temp
+
+
+
+#-----------------------------------------------------------------------------#
+# OUTPUT
+#-----------------------------------------------------------------------------#
+
+# 1280x900 .mp4 (master)
+qt-faststart $temp $mp4_1280
+rm $temp
+
+# 1280x900 .ogv
+ffmpeg2theora $mp4_1280 --optimize -o $ogv_1280
+
+# 360x270 .mp4
+ffmpeg -i $mp4_1280 -s 360x270 -acodec libfaac -aq 100 -vcodec libx264 -preset slow -crf 25 -threads 0 $mp4_360
+
+# 360x270 .ogv
+ffmpeg2theora $mp4_360 --optimize -o $ogv_360
