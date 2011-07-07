@@ -19,14 +19,11 @@ sudo apt-get install build-essential git-core checkinstall yasm texi2html \
     libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev
 ```
 
-###2. Grab a fresh copy of our test video, rename it video.avi
-
-@TODO get download url
+###2. Grab a fresh copy of our test video, add it to input/
 
 ```sh
 cd path_to_cloned_repo/input
-wget ......
-mv name_of_video.avi video.avi
+wget http://ask-ryan-k-for-the-link.com/video.avi
 ```
 
 ###3. Install libraries
@@ -46,15 +43,15 @@ cd x264
 ./configure --enable-static
 make
 sudo checkinstall --pkgname=x264 --pkgversion="3:$(./version.sh | \
-    awk -F'[" ]' '/POINT/{print $4"+git"$5}')" --backup=no --deldoc=yes \
-    --fstrans=no --default
+  awk -F'[" ]' '/POINT/{print $4"+git"$5}')" --backup=no --deldoc=yes \
+  --fstrans=no --default
 
 # install libvpx
 cd ../libvpx
 ./configure
 make
 sudo checkinstall --pkgname=libvpx --pkgversion="1:$(date +%Y%m%d%H%M)-git" --backup=no \
-    --deldoc=yes --fstrans=no --default
+  --deldoc=yes --fstrans=no --default
 
 # install ffmpeg
 cd ../ffmpeg
@@ -69,8 +66,8 @@ sudo checkinstall --pkgname=ffmpeg --pkgversion="5:$(date +%Y%m%d%H%M)-git" --ba
 # install qt-faststart
 make tools/qt-faststart
 sudo checkinstall --pkgname=qt-faststart --pkgversion="$(date +%Y%m%d%H%M)-git" --backup=no \
-    --deldoc=yes --fstrans=no --default install -D -m755 tools/qt-faststart \
-    /usr/local/bin/qt-faststart
+  --deldoc=yes --fstrans=no --default install -D -m755 tools/qt-faststart \
+  /usr/local/bin/qt-faststart
 
 # install transcode
 sudo apt-get install transcode
@@ -78,7 +75,7 @@ sudo apt-get install transcode
 
 ###4. Run the script!
 
-```
+```sh
 cd path_to_cloned_repo/
-./convert your_video_file.avi
+./convert input/your_video_file.avi
 ```
