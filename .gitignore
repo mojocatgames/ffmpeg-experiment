@@ -2,9 +2,15 @@
 *.mp4
 *.avi
 *.ogv
+*.mpg
+*.jpg
 
 # ignore source files
 lib/x264
 lib/libvpx
 lib/ffmpeg
+
+# exclude
+!watermark.png
+!outro.jpg
 
