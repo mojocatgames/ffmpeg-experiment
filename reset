@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm tmp/* output/*
+
+# required to preserve git dir structure
+touch tmp/blank output/blank
+

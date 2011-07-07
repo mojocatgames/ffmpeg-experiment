@@ -10,7 +10,7 @@ lib/x264
 lib/libvpx
 lib/ffmpeg
 
-# exclude
+# do include
 !watermark.png
 !outro.jpg
 

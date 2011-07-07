@@ -2,13 +2,13 @@
 
 This proof of concept has only been tested on my Acer 3810T running Ubuntu 11.04.
 
-It uses ffmpeg settings that are slower, but produce higher quality. 
+It uses ffmpeg settings that lean towards slower / higher quality. Tweaks will probably be necessary for large scale processing. 
 
 Much credit owed to FakeOutdoorsman from [this thread](http://ubuntuforums.org/showthread.php?t=786095).
 
 #Installation
 
-###1. Uninstall existing ffmpeg and libraries, then download the latest. We're starting clean.
+###1. Uninstall existing ffmpeg and libraries, then download the latest. We're starting from scratch.
 
 ```sh
 sudo apt-get remove ffmpeg x264 libx264-dev libvpx-dev
@@ -29,7 +29,9 @@ wget ......
 mv name_of_video.avi video.avi
 ```
 
-###3. Install transcode, x264, libvpx (someday we might want to support webM), and ffmpeg (with libavfilter).
+###3. Install libraries
+
+We'll be installing libx264, libvpx (someday, we might want to support webM), ffmpeg, qt-faststart, and transcode. 
 
 ```sh
 cd path_to_cloned_repo/lib
@@ -78,5 +80,5 @@ sudo apt-get install transcode
 
 ```
 cd path_to_cloned_repo/
-./convert_videos
+./convert your_video_file.avi
 ```

@@ -1,12 +1,14 @@
 #!/bin/sh
 
 # options
-input='input/input.avi'
-watermark='img/watermark.png'
-outro_img='img/outro.jpg'
+input=$1
 outro_duration=150
 fade_duration=50
-quality=5                         # 1 is best, 31 is worst
+quality=5           # 1 is best, 31 is worst
+
+# src files
+outro_img='img/outro.jpg'
+watermark='img/watermark.png'
 
 # tmp files
 outro='tmp/outro.mpg'
@@ -15,11 +17,13 @@ master='tmp/master.mpg'
 temp_mp4='tmp/temp.mp4'
 
 # output files
-thumb='output/large_thumb.jpg'
-mp4_1280='output/1280.mp4'
-ogv_1280='output/1280.ogv'
-mp4_360='output/360.mp4'
-ogv_360='output/360.ogv'
+name=$(basename $input)
+name=${name%.*}
+screen="output/${name}_screen.jpg"
+mp4_1280="output/${name}_1280.mp4"
+ogv_1280="output/${name}_1280.ogv"
+mp4_360="output/${name}_360.mp4"
+ogv_360="output/${name}_360.ogv"
 
 # calculate the total number of frames (required for fade in/out)
 frames=`tcprobe -i $input | grep -o -P "(?<=\blength:\s)(\w+)"`
@@ -32,22 +36,24 @@ outro_offset=`expr $outro_duration - $fade_duration`
 # PRE-PROCESSING
 #-----------------------------------------------------------------------------#
 
+# if needed, create an outro mpeg from a jpeg
+if [ ! -e $outro ]
+then
+  ffmpeg -loop_input -vframes $outro_duration -i $outro_img -vf \
+    "scale=1280:960, fade=in:0:$fade_duration, fade=out:$outro_offset:$fade_duration" \
+    -r 30 -qscale $quality $outro
+fi
 
-# create an outro mpeg from a jpeg (only required once)
-ffmpeg -loop_input -vframes $outro_duration -i $outro_img -vf \
-  "scale=1280:960, fade=in:0:$fade_duration, fade=out:$outro_offset:$fade_duration" \
-  -r 30 -qscale $quality $outro
-
-# create an temp mpeg with watermark and fade in from input
+# create an temp mpeg from input (watermark + fade included)
 ffmpeg -i $input -vf \
   "movie=$watermark [logo]; [in][logo] overlay=main_w-overlay_w-10:main_h-overlay_h-10, fade=in:0:$fade_duration, fade=out:$offset:$fade_duration [out]" \
-  -r 30 -qscale $quality $temp
+  -r 30 -qscale $quality -y $temp
 
 # join the input with the outro
 cat $temp $outro > $master
 
-# grab a thumbnail image from 10 seconds in
-ffmpeg -i $master -f image2 -ss 10 -vframes 1 $thumb
+# grab a screenshot image from 10 seconds in
+ffmpeg -i $master -f image2 -ss 10 -vframes 1 -y $screen
 
 
 
@@ -56,7 +62,7 @@ ffmpeg -i $master -f image2 -ss 10 -vframes 1 $thumb
 #-----------------------------------------------------------------------------#
 
 # 1280x960 .mp4
-ffmpeg -i $master -s 1280x960 -acodec libfaac -aq 100 -vcodec libx264 -preset slow -crf 25 -threads 0 $temp_mp4
+ffmpeg -i $master -s 1280x960 -acodec libfaac -aq 100 -vcodec libx264 -preset slow -crf 25 -threads 0 -y $temp_mp4
 qt-faststart $temp_mp4 $mp4_1280
 
 # 1280x960 .ogv
