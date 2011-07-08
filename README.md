@@ -1,6 +1,6 @@
 #Note
 
-This proof of concept has only been tested on my Acer 3810T running Ubuntu 11.04.
+This proof of concept has only been tested on my Acer 3810T running Ubuntu 11.04. Most likely works on Mac.
 
 It uses ffmpeg settings that lean towards slower / higher quality. Tweaks will probably be necessary for large scale processing. 
 
@@ -8,30 +8,45 @@ Much credit owed to FakeOutdoorsman from [this thread](http://ubuntuforums.org/s
 
 #Installation
 
-###1. Uninstall existing ffmpeg and libraries, then download the latest. We're starting from scratch.
+###0. If you're on Windows, install Ubuntu.
 
-```sh
+Visit [this page](http://www.ubuntu.com/download/ubuntu/windows-installer) and click 'Start download'.
+
+Follow the prompts, restart, and choose Ubuntu as your OS when the boot screen appears. Complete the installation and open up gnome-terminal.
+
+###1. Update your system. We're starting from scratch.
+
+Included in this bunch are tools required for development and video/audio processing. 
+
+```bash
 sudo apt-get remove ffmpeg x264 libx264-dev libvpx-dev
 sudo apt-get update
 sudo apt-get install build-essential git-core checkinstall yasm texi2html \
     libfaac-dev libjack-jackd2-dev libmp3lame-dev libopencore-amrnb-dev \
     libopencore-amrwb-dev libsdl1.2-dev libtheora-dev libva-dev libvdpau-dev \
-    libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev
+    libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev transcode
 ```
 
-###2. Grab a fresh copy of our test video, add it to input/
+###2. Clone this repo
 
-```sh
-cd path_to_cloned_repo/input
-wget http://ask-ryan-k-for-the-link.com/video.avi
+```bash
+git clone git://github.com/ezYZ/ffmpeg-experiment.git
 ```
 
-###3. Install libraries
+###3. Grab a copy of our test video(s)
 
-We'll be installing libx264, libvpx (someday, we might want to support webM), ffmpeg, qt-faststart, and transcode. 
+If you don't have a suitable video, ask Ryan K.
 
-```sh
-cd path_to_cloned_repo/lib
+You can store these videos anywhere, but for convenience, I've created the `input/` dir.
+
+###4. Install FFmpeg from source
+
+We'll be installing libx264, libvpx (someday, we might want to support webM), ffmpeg, and qt-faststart.
+
+Navigate to your `ffmpeg-experiment/` dir and run:
+
+```bash
+cd lib
 
 # clone sources
 git clone git://git.videolan.org/x264
@@ -68,14 +83,18 @@ make tools/qt-faststart
 sudo checkinstall --pkgname=qt-faststart --pkgversion="$(date +%Y%m%d%H%M)-git" --backup=no \
   --deldoc=yes --fstrans=no --default install -D -m755 tools/qt-faststart \
   /usr/local/bin/qt-faststart
-
-# install transcode
-sudo apt-get install transcode
 ```
 
-###4. Run the script!
+###5. Run the script!
 
-```sh
-cd path_to_cloned_repo/
+Navigate back to your `ffmpeg-experiment/` dir and run:
+
+```bash
 ./convert input/your_video_file.avi
+```
+
+To remove all temporary and output files, run:
+
+```bash
+./reset
 ```
