@@ -27,8 +27,8 @@ ogv_360="output/${name}_360.ogv"
 
 # calculate the total number of frames (required for fade in/out)
 frames=`tcprobe -i $input | grep -o -P "(?<=\blength:\s)(\w+)"`
-offset=`expr $frames - $fade_duration`
-outro_offset=`expr $outro_duration - $fade_duration`
+offset=`expr $frames - $fade_duration - 5`
+outro_offset=`expr $outro_duration - $fade_duration - 5`
 
 
 
@@ -53,7 +53,7 @@ ffmpeg -i $input -vf \
 cat $temp $outro > $master
 
 # grab a screenshot image from 10 seconds in
-ffmpeg -i $master -f image2 -ss 10 -vframes 1 -y $screen
+ffmpeg -ss 10 -i $master -f image2 -vframes 1 -y $screen
 
 
 
@@ -62,14 +62,14 @@ ffmpeg -i $master -f image2 -ss 10 -vframes 1 -y $screen
 #-----------------------------------------------------------------------------#
 
 # 1280x960 .mp4
-ffmpeg -i $master -s 1280x960 -acodec libfaac -aq 100 -vcodec libx264 -preset slow -crf 25 -threads 0 -y $temp_mp4
+ffmpeg -i $master -s 1280x960 -acodec libfaac -aq 50 -vcodec libx264 -preset slow -crf 30 -tune animation -threads 0 -y $temp_mp4
 qt-faststart $temp_mp4 $mp4_1280
 
 # 1280x960 .ogv
 ffmpeg2theora $mp4_1280 --optimize -o $ogv_1280
 
 # 360x270 .mp4
-ffmpeg -i $mp4_1280 -s 360x270 -acodec libfaac -aq 100 -vcodec libx264 -preset slow -crf 25 -threads 0 $mp4_360
+ffmpeg -i $mp4_1280 -s 360x270 -acodec libfaac -aq 50 -vcodec libx264 -preset slow -crf 30 -tune animation -threads 0 $mp4_360
 
 # 360x270 .ogv
 ffmpeg2theora $mp4_360 --optimize -o $ogv_360

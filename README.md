@@ -2,7 +2,7 @@
 
 This proof of concept has only been tested on my Acer 3810T running Ubuntu 11.04. Most likely works on Mac.
 
-It uses ffmpeg settings that lean towards slower / higher quality. Tweaks will probably be necessary for large scale processing. 
+FFmpeg settings tweaked for lower file sizes at the expense of lower quality and greater encoding time.
 
 Much credit owed to FakeOutdoorsman from [this thread](http://ubuntuforums.org/showthread.php?t=786095).
 
