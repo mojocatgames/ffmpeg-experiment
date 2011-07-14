@@ -24,7 +24,7 @@ sudo apt-get update
 sudo apt-get install build-essential git-core checkinstall yasm texi2html \
     libfaac-dev libjack-jackd2-dev libmp3lame-dev libopencore-amrnb-dev \
     libopencore-amrwb-dev libsdl1.2-dev libtheora-dev libva-dev libvdpau-dev \
-    libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev \ 
+    libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev \
     ffmpeg2theora transcode
 ```
 
